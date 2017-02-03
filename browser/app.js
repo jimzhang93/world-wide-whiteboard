@@ -8,7 +8,24 @@ socket.on('connect', function () {
 });
 
 socket.on('drawn', function(start, end, strokeColor) {
-  whiteboard.draw(start, end, strokeColor, false);
+  $.ajax({
+    method: 'GET',
+    url: '/'
+  }).then(function(results) {
+    results.forEach(function(result) {
+    let start = {
+      x: result.startX,
+      y: result.startY
+    },
+    end = {
+      x: result.endX,
+      y: result.endY
+    },
+    strokeColor = result.color;
+    res.sendFile(path.join(__dirname, 'index.html'));
+    whiteboard.draw(start, end, strokeColor, false);
+    });
+  });
 });
 
 whiteboard.on('draw', function(start, end, strokeColor) {
