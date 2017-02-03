@@ -6,6 +6,8 @@ let Session = require('./models/table');
 // app.listen() returns an http.Server object
 // http://expressjs.com/en/4x/api.html#app.listen
 
+app.use('/jquery', express.static(path.join(__dirname, '/node_modules/jquery/dist')));
+
 Session.sync({force: true})
 .then(function() {
   var server = app.listen(1337, function () {
@@ -45,22 +47,10 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// app.get('/saved', function (req, res) {
-//   Session.findAll({})
-//   .then(function(results) {
-//     results.forEach(function(result) {
-//     let start = {
-//       x: result.startX,
-//       y: result.startY
-//     },
-//     end = {
-//       x: result.endX,
-//       y: result.endY
-//     },
-//     strokeColor = result.color;
-//     res.sendFile(path.join(__dirname, 'index.html'));
-//     whiteboard.draw(start, end, strokeColor, false);
-//     });
-//   });
-// });
+app.get('/saved', function (req, res) {
+  Session.findAll({})
+  .then(function(results) {
+    res.send(results);
+  });
+});
 
